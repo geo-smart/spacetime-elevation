@@ -4,9 +4,9 @@ Ready to elevate your spatiotemporal prediction skills? :space_invader: :satelli
 
 This is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), taking place Oct 23-27 2023 at University of Washington.
 
-Its focus is advancing spatiotemporal prediction of big data geospatial time series, in particular using Gaussian Processes. Our primary objective is to model the continuous evolution of snow and ice covered surface elevations, however the methods we develop will be generic to any raster time series, whenever possible. We welcome team members that would like to explore other datasets, such as optical imagery, laser altrimetry, synthetic aperture radar or temperature grids!
+Its focus is advancing spatiotemporal prediction of big data geospatial time series, in particular using **Gaussian Processes**. Our primary objective is to **estimate the continuous evolution of snow and ice covered surface elevations**, however the methods and tools we develop will be generic to any geospatial time series, whenever possible. **We welcome team members that would like to explore other datasets**, such as optical imagery, laser altimetry, synthetic aperture radar or temperature grids!
 
-Part of this effort will also include further development of the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for time-stacking and fitting geospatial gridded datasets out-of-memory, and possibly other upstream packages such as [RioXarray](https://github.com/corteva/rioxarray) and [xDEM](https://github.com/GlacioHack/xdem).
+Part of this effort will include further development of the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for time-stacking and fitting geospatial gridded datasets out-of-memory, and possibly other upstream packages such as [RioXarray](https://github.com/corteva/rioxarray) and [xDEM](https://github.com/GlacioHack/xdem).
 
 *Graphic from GTSA:*
 
@@ -22,7 +22,7 @@ This projects aims to predict continuous spatiotemporal estimates from spatially
 It is primarily a software and data science method-oriented project, with the following three points of focus (decreasing order of envisioned work):
 1. **Software development:** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
 2. **Data science method:** Practice the use of spatiotemporal prediction methods, in particular Gaussian Processes, for big remote sensing data.
-3. **Applications:** Apply to glacier elevation changes, or snow depth, or more
+3. **Applications:** Apply to glacier elevation changes, or snow depth, or more.
 
 Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
 
