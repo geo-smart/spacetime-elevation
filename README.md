@@ -5,8 +5,9 @@ This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-s
 Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting datasets out-of-memory.
 
 *Graphic from GTSA:*
-<img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-light.png?raw=true#gh-light-mode-only" align="left" width="480px">
-<img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-dark.png?raw=true#gh-dark-mode-only" align="left" width="480px">
+
+<img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-light.png?raw=true#gh-light-mode-only" align="center" width="480px">
+<img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-dark.png?raw=true#gh-dark-mode-only" align="center" width="480px">
 
 ## Spatiotemporal prediction of icy elevation changes
 
