@@ -2,7 +2,7 @@
 
 This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), Oct 23-27 2023 at University of Washington.
 
-Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting geospatial space-time datasets out-of-memory.
+Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting geospatial space-time datasets out-of-memory, with application to glacier and snow surface elevation changes.
 
 *Graphic from GTSA:*
 
