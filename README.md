@@ -1,8 +1,12 @@
 # spacetime-elevation
 
-This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), Oct 23-27 2023 at University of Washington.
+Ready to elevate your spatiotemporal prediction skills? :space_invader: :satellite: :globe_with_meridians:
 
-Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting geospatial space-time datasets out-of-memory, with application to glacier and snow surface elevation changes.
+This is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), ocurring Oct 23-27 2023 at University of Washington.
+
+Its focus is advancing spatiotemporal prediction of big data geospatial time series, in particular using Gaussian Processes. Our primary objective is to model the continuous evolution of snow and ice covered surface elevations, however the methods we develop will be generic to any raster time series, whenever possible. We welcome team members that would like to explore other datasets, such as optical imagery, laser altrimetry, synthetic aperture radar or temperature grids.
+
+To this end, our efforts will focus on further developing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for time-stacking and fitting geospatial gridded datasets out-of-memory, and possibly other upstream packages such as [RioXarray](https://github.com/corteva/rioxarray) and [xDEM](https://github.com/GlacioHack/xdem).
 
 *Graphic from GTSA:*
 
