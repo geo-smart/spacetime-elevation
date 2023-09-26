@@ -33,9 +33,6 @@ Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask
 Observational data in Earth system science, whether ground or remote-sensing-based, is inherently sparse in space and time (e.g., point ground stations, fixed satellite footprint and revisit time).
 For climate variables such as glaciers and seasonal snow that have substantial seasonal and regional variabilities, it is therefore difficult to reconcile observations between sites and time periods. This limitation largely hampers estimations of past changes (e.g., glacier mass changes, seasonal snow water equivalent) and their ingestion into models for predictions. 
 
-In this project, we aim to **develop efficient tools for spatiotemporal prediction on large datasets, in particular Gaussian Processes**. 
-While our project applies in particular to elevation data, it aims at **building a generic toolset for spatiotemporal methods on 3-D space-time arrays (2D space + 1D time)**.
-
 ### Goals
 
 We identify two short-term goals (doable within the Hackweek timespan):
