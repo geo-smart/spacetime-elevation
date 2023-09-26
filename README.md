@@ -1,19 +1,19 @@
 # icy_spacetime_heights
 
-This repository presents the `icy_spacetime_heights` project of the [GeoSMART Hackweek](https://github.com/geo-smart), taking place Oct 23-27 2023 at University of Washington.
+This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), Oct 23-27 2023 at University of Washington.
 
-Its efforts will focus on using and advancing the package Geospatial Time Series Analysis (GTSA) located here: [GTSA](https://github.com/friedrichknuth/gtsa).
+Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa).
 
 ## Spatiotemporal prediction of surface elevation changes on icy terrain from repeat DEMs
 
 ### Summary
 
-This project focuses on predicting continuous surface elevation changes from spatially and temporally sparse elevation measurements.
+Predicting continuous surface elevation changes from spatially and temporally sparse elevation measurements.
 
-It can be 
-**Main focus 1 (data science method):** Gaussian Processes for big data.
-**Main focus 2 (software development):** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
-**Secondary focus (applications):** Glacier elevation changes, snow depth.
+Focuses:
+- **Main 1 (data science method):** Gaussian Processes for big data.
+- **Main 2 (software development):** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
+- **Secondary (applications):** Glacier elevation changes, snow depth.
 
 Tools that will be used: [Xarray](https://xarray.dev/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
 
@@ -59,23 +59,29 @@ To combine those, **we aim to use and build upon the existing toolset in the Geo
 
 ### Data
 
-Ongoing.
+Analysis ready dataset of:
+1. Historical (~1930s-1990s) photogrammetric DEMs stacked as zarr file and chunked along time dimension,
+2. Modern (2000s-2020s) ASTER and WorldView DEMs stacked as zarr file and chunked along time dimension.
+3. Glacier outlines shapefiles.
+
+Available via AWS S3.
 
 ### Additional resources or background reading
 
-**Reading:**
+**Reading and learning:**
+- Interactive visualization of Gaussian Processes: http://www.infinitecuriosity.org/vizgp/.
 - Scikit-learn examples: https://scikit-learn.org/stable/modules/gaussian_process.html#gaussian-process-regression-gpr
 
-**Code:**
-- Application to temporal prediction of glacier elevation in **pyddem**: https://pyddem.readthedocs.io/en/v0.1.1/fitting.html#gaussian-process-regression-gpr. 
-- 
+**Video:**
+- Application to glacier elevation changes using ICESat-2 (by Alex Gardner): https://www.youtube.com/watch?v=nhmREuVOWXg&t=1079.
+
+**Code examples:**
+- Application to temporal prediction of ASTER glacier elevation in **pyddem**: https://pyddem.readthedocs.io/en/v0.1.1/fitting.html#gaussian-process-regression-gpr. 
+- Application to historical glacier elevation: https://github.com/friedrichknuth/gtsa/blob/main/notebooks/processing/02_time_series_computations.ipynb
 
 **Publications:**
 - Application to global glacier elevation changes with ASTER (Hugonnet et al., 2021): https://www.nature.com/articles/s41586-021-03436-z,
 - Application to Icelandic glacier elevation with multiple high-res sensors (Bernad et al., 2023): https://dumas.ccsd.cnrs.fr/dumas-03772002.
-
-**Video:**
-- Application to glacier elevation changes using ICESat-2 (by Alex Gardner): https://www.youtube.com/watch?v=nhmREuVOWXg&t=1079.
 
 ### Tasks
 
