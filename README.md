@@ -11,11 +11,11 @@ Its efforts will focus on using and advancing the package Geospatial Time Series
 This projects aims to predict continuous surface elevation changes from spatially and temporally sparse elevation measurements.
 
 It has three points of focus:
-- **Main 1 (data science method):** Spatiotemporal prediction, in particular Gaussian Processes, for big remote sensing data.
+- **Main 1 (data science method):** Practice the use of spatiotemporal prediction, in particular Gaussian Processes, for big remote sensing data.
 - **Main 2 (software development):** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
-- **Secondary (applications):** Glacier elevation changes, snow depth.
+- **Secondary (applications):** Apply to glacier elevation changes or snow depth.
 
-Tools that will be used: [Xarray](https://xarray.dev/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
+Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
 
 ### Collaborators
 
@@ -26,7 +26,7 @@ Tools that will be used: [Xarray](https://xarray.dev/), [RioXarray](https://cort
 ### The problem
 
 Observational data in Earth system science, whether ground or remote-sensing-based, is inherently sparse in space and time (e.g., point ground stations, fixed satellite footprint and revisit time).
-For climate variables such as glaciers and seasonal snow that exhibit substantial seasonal and regional variabilities, it is therefore difficult to reconcile observations between sites and time periods. This limitation largely hampers estimations of past changes (e.g., glacier mass changes, seasonal snow water equivalent) and their ingestion into models for predictions. 
+For climate variables such as glaciers and seasonal snow that have substantial seasonal and regional variabilities, it is therefore difficult to reconcile observations between sites and time periods. This limitation largely hampers estimations of past changes (e.g., glacier mass changes, seasonal snow water equivalent) and their ingestion into models for predictions. 
 
 In this project, we aim to **develop efficient tools for spatiotemporal prediction on large datasets, in particular Gaussian Processes**. 
 While our project applies in particular to elevation data, it aims at **building a generic toolset for spatiotemporal methods on 3-D space-time arrays (2D space + 1D time)**.
@@ -36,33 +36,33 @@ While our project applies in particular to elevation data, it aims at **building
 We identify two short-term goals (doable within the Hackweek timespan):
 
 - **Start-up the development of a package on geospatial time series analysis** for 3-D space-time arrays which allows to apply existing methods in a scalable manner for georeferenced data,
-- **Constrain the covariance of glacier and snow elevations** to correctly understand and apply Gaussian Process regression.
+- **Constrain the covariance of glacier or snow elevations** to correctly understand and apply Gaussian Process regression.
 
 And two long-term goals (extending after the Hackweek):
 
 - **Reach a stable version of a tested, documented and open source package on geospatial time series analysis**,
 - **Publish a comparative study on the performance of spatio-temporal fitting methods** (parametric, non-parametric, physically-informed) for surface elevation.
 
-### Proposed methods
+### Background on proposed methods
 
 Gaussian Processes are a promising avenue in non-parametric statistical modelling as, by learning the data covariance structure, they can provide a "best-unbiased estimator" for a specific problem using only the data itself. Gaussian Processes have the significant advantage of being independent of any physical assumptions (as in physically-based modelling) or parametrization (for other types of statistical modelling). 
 Moreover, by learning the data covariance, Gaussian Process methods generally have the ability to predict reliable errors along their mean estimates. 
 
 There is a lot of overlap between Gaussian Processes and geostatistics, as simple kriging is essentially another name for the same concept as Gaussian Processes. However, the generalization brought by Gaussian Processes to other fields has accelerated related research, in particular in terms of computational efficiency. With this aspect in mind, Gaussian Processes are now better adapted to the application of big data problems.
 
-### Proposed tools
+### Background on proposed tools
 
-For computational efficiency, Gaussian Processes would be applied on GPU using [GPyTorch](https://gpytorch.ai/). 
-In order to perform out-of-memory computations on large georeferenced datasets, we would use [Xarray](https://xarray.dev/) and [Dask](https://docs.dask.org/en/stable/) as well as [RioXarray](https://corteva.github.io/rioxarray/html/index.html).
+Based on the above, for computational efficiency, we would utilize Gaussian Processes packages. For scaling, it is best to compute on the GPU, which is integrated in [GPyTorch](https://gpytorch.ai/). 
+In order to perform out-of-memory computations on large georeferenced datasets, we would combine [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/) and [RioXarray](https://corteva.github.io/rioxarray/html/index.html).
 
 To this end, **we aim to use and build upon the existing toolset in the Geospatial Time Series Analysis (GTSA) package**: https://github.com/friedrichknuth/gtsa.
 
 ### Data
 
 Analysis ready dataset of:
-1. Historical (~1930s-1990s) photogrammetric DEMs stacked as zarr file and chunked along time dimension,
-2. Modern (2000s-2020s) ASTER and WorldView DEMs stacked as zarr file and chunked along time dimension.
-3. Glacier outlines shapefiles.
+1. **Historical (~1930s-1990s) photogrammetric DEMs in CONUS** stacked as zarr file and chunked along time dimension,
+2. **Modern (2000s-2020s) ASTER and WorldView DEMs worldwide** stacked as zarr file and chunked along time dimension.
+3. **Glacier outlines shapefiles.**
 
 Available via AWS S3.
 
@@ -81,15 +81,8 @@ Available via AWS S3.
 
 **Publications:**
 - Application to global glacier elevation changes with ASTER (Hugonnet et al., 2021): https://www.nature.com/articles/s41586-021-03436-z,
-- Application to Icelandic glacier elevation with multiple high-res sensors (Bernad et al., 2023): https://dumas.ccsd.cnrs.fr/dumas-03772002.
+- Application to Icelandic glacier elevation with multiple high-res sensors (Bernat et al., 2023): https://dumas.ccsd.cnrs.fr/dumas-03772002.
 
 ### Tasks
 
-What are the individual tasks or steps that need to be taken to achieve the project goals? Think about which tasks are dependent on prior tasks, or which tasks can be performed in parallel. This can help divide up project work among team members.
-
-* Task 1 (all team members)
-* Task 2
-  * Task 2a (assigned to team member A)
-  * Task 2b (assigned to team member B)
-* Task 3
-* ...
+In construction
