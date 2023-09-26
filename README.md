@@ -1,4 +1,4 @@
-# icy_spacetime_heights
+# icy-spacetime-heights
 
 This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), Oct 23-27 2023 at University of Washington.
 
