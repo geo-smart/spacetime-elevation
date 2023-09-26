@@ -1,24 +1,28 @@
-# icy-spacetime-heights
+# spacetime-elevation
 
-This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), Oct 23-27 2023 at University of Washington.
+Ready to elevate your spatiotemporal prediction skills? :space_invader: :satellite: :globe_with_meridians:
 
-Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting geospatial space-time datasets out-of-memory, with application to glacier and snow surface elevation changes.
+This is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), taking place Oct 23-27 2023 at University of Washington.
+
+Its focus is advancing spatiotemporal prediction of big data geospatial time series, in particular using **Gaussian Processes**. Our primary objective is to **estimate the continuous evolution of snow and ice covered surface elevations**, however the methods and tools we develop will be generic to any geospatial time series, whenever possible. **We welcome team members that would like to explore other datasets**, such as optical imagery, laser altimetry, synthetic aperture radar or temperature grids!
+
+Part of this effort will include further development of the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for time-stacking and fitting geospatial gridded datasets out-of-memory, and possibly other upstream packages such as [RioXarray](https://github.com/corteva/rioxarray) and [xDEM](https://github.com/GlacioHack/xdem).
 
 *Graphic from GTSA:*
 
 <img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-light.png?raw=true#gh-light-mode-only" align="center" width="480px">
 <img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-dark.png?raw=true#gh-dark-mode-only" align="center" width="480px">
 
-## Spatiotemporal prediction of icy elevation changes
+## Spatiotemporal prediction of surface elevation changes, and more
 
 ### Summary
 
-This projects aims to predict continuous surface elevation changes from spatially and temporally sparse elevation measurements.
+This projects aims to predict continuous spatiotemporal estimates from spatially and temporally sparse measurements.
 
 It is primarily a software and data science method-oriented project, with the following three points of focus (decreasing order of envisioned work):
 1. **Software development:** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
 2. **Data science method:** Practice the use of spatiotemporal prediction methods, in particular Gaussian Processes, for big remote sensing data.
-3. **Applications:** Apply to glacier elevation changes or snow depth.
+3. **Applications:** Apply to glacier elevation changes, or snow depth, or more.
 
 Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
 
