@@ -2,7 +2,7 @@
 
 This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), Oct 23-27 2023 at University of Washington.
 
-Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting datasets out-of-memory.
+Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting geospatial space-time datasets out-of-memory.
 
 *Graphic from GTSA:*
 
@@ -16,9 +16,9 @@ Its efforts will focus on using and advancing the package Geospatial Time Series
 This projects aims to predict continuous surface elevation changes from spatially and temporally sparse elevation measurements.
 
 It has three points of focus:
-- **Main 1 (data science method):** Practice the use of spatiotemporal prediction, in particular Gaussian Processes, for big remote sensing data.
-- **Main 2 (software development):** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
-- **Secondary (applications):** Apply to glacier elevation changes or snow depth.
+- **Data science method:** Practice the use of spatiotemporal prediction, in particular Gaussian Processes, for big remote sensing data.
+- **Software development:** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
+- **Applications:** Apply to glacier elevation changes or snow depth.
 
 Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
 
