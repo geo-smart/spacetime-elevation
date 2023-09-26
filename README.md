@@ -1,78 +1,93 @@
-# Sample Project
+# icy_spacetime_heights
 
-This is as an example on how teams can structure their project repositories and format their project README.md file. Thanks to Lindsey Heagey and Joachim Meyer for the template!
+This repository is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), Oct 23-27 2023 at University of Washington.
 
-## Files
+Its efforts will focus on using and advancing the package Geospatial Time Series Analysis, [GTSA](https://github.com/friedrichknuth/gtsa), that provides routines for stacking and fitting geospatial space-time datasets out-of-memory, with application to glacier and snow surface elevation changes.
 
-* `.gitignore`
-<br> Globally ignored files by `git` for the project.
-* `environment.yml`
-<br> `conda` environment description needed to run this project.
-* `README.md`
-<br> Description of the project (see suggested headings below)
+*Graphic from GTSA:*
 
-## Folders
+<img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-light.png?raw=true#gh-light-mode-only" align="center" width="480px">
+<img src="https://github.com/friedrichknuth/gtsa-data/blob/main/img/stacking-dark.png?raw=true#gh-dark-mode-only" align="center" width="480px">
 
-This template provides the following folders and suggested organizaiton structure for the project repository, but each project team is free to organize their repository as they see fit.
+## Spatiotemporal prediction of icy elevation changes
 
-### `contributors`
-Each team member can create their own folder under contributors, within which they can work on their own scripts, notebooks, and other files. Having a dedicated folder for each person helps to prevent conflicts when merging with the main branch. This is a good place for team members to start off exploring data and methods for the project.
+### Summary
 
-### `notebooks`
-Notebooks that are considered delivered results for the project should go in here.
+This projects aims to predict continuous surface elevation changes from spatially and temporally sparse elevation measurements.
 
-### `scripts`
-Helper utilities that are shared with the team should go in here.
+It is primarily a software and data science method-oriented project, with the following three points of focus (decreasing order of envisioned work):
+1. **Software development:** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
+2. **Data science method:** Practice the use of spatiotemporal prediction methods, in particular Gaussian Processes, for big remote sensing data.
+3. **Applications:** Apply to glacier elevation changes or snow depth.
 
-# Recommended content for your README.md file:
-
-## Project Summary
-
-### Project Title
-
-Brief title describing the proposed work.
+Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
 
 ### Collaborators
 
-List all participants on the project.
-
-* Project lead
-* Team member
-* Team member
-* Team member
+* [Romain Hugonnet](https://github.com/rhugonnet)
+* [Friedrich Knuth](https://github.com/friedrichknuth)
 * ...
 
 ### The problem
 
-What problem are you going to explore? Provide a few sentences. If this is a technical exploration of software or data science methods, explain why this work is important in a broader context and specific applications of this work. To get some ideas, see example use cases on the GeoSMART website [here](https://geo-smart.github.io/usecases).
+Observational data in Earth system science, whether ground or remote-sensing-based, is inherently sparse in space and time (e.g., point ground stations, fixed satellite footprint and revisit time).
+For climate variables such as glaciers and seasonal snow that have substantial seasonal and regional variabilities, it is therefore difficult to reconcile observations between sites and time periods. This limitation largely hampers estimations of past changes (e.g., glacier mass changes, seasonal snow water equivalent) and their ingestion into models for predictions. 
 
-### Specific questions / project goals
+In this project, we aim to **develop efficient tools for spatiotemporal prediction on large datasets, in particular Gaussian Processes**. 
+While our project applies in particular to elevation data, it aims at **building a generic toolset for spatiotemporal methods on 3-D space-time arrays (2D space + 1D time)**.
 
-List the specific tasks you want to accomplish, project goals, or research questions you want to answer. Think about what outcomes or deliverables you'd like to create (e.g. a series of tutorial notebooks demonstrating a [use case](https://geo-smart.github.io/usecases#Contributing), or a new python package).
+### Goals
+
+We identify two short-term goals (doable within the Hackweek timespan):
+
+- **Start-up the development of a package on geospatial time series analysis** for 3-D space-time arrays which allows to apply existing methods in a scalable manner for georeferenced data,
+- **Constrain the covariance of glacier or snow elevations** to correctly understand and apply Gaussian Process regression.
+
+And two long-term goals (extending after the Hackweek):
+
+- **Reach a stable version of a tested, documented and open source package on geospatial time series analysis**,
+- **Publish a comparative study on the performance of spatio-temporal fitting methods** (parametric, non-parametric, physically-informed) for surface elevation.
+
+### Background on proposed methods
+
+Gaussian Processes are a promising avenue in non-parametric statistical modelling as, by learning the data covariance structure, they can provide a "best-unbiased estimator" for a specific problem using only the data itself. Gaussian Processes have the significant advantage of being independent of any physical assumptions (as in physically-based modelling) or parametrization (for other types of statistical modelling). 
+Moreover, by learning the data covariance, Gaussian Process methods generally have the ability to predict reliable errors along their mean estimates. 
+
+There is a lot of overlap between Gaussian Processes and geostatistics, as simple kriging is essentially another name for the same concept as Gaussian Processes. However, the generalization brought by Gaussian Processes to other fields has accelerated related research, in particular in terms of computational efficiency. With this aspect in mind, Gaussian Processes are now better adapted to the application of big data problems.
+
+### Background on proposed tools
+
+Based on the above, for computational efficiency, we would utilize Gaussian Processes packages. For scaling, it is best to compute on the GPU, which is integrated in [GPyTorch](https://gpytorch.ai/). 
+In order to perform out-of-memory computations on large georeferenced datasets, we would combine [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/) and [RioXarray](https://corteva.github.io/rioxarray/html/index.html).
+
+To this end, **we aim to use and build upon the existing toolset in the Geospatial Time Series Analysis (GTSA) package**: https://github.com/friedrichknuth/gtsa.
 
 ### Data
 
-Briefly describe the data that will be used here (size, format, how to access).
+Analysis ready dataset of:
+1. **Historical (~1930s-1990s) photogrammetric DEMs in CONUS** stacked as zarr file and chunked along time dimension,
+2. **Modern (2000s-2020s) ASTER and WorldView DEMs worldwide** stacked as zarr file and chunked along time dimension.
+3. **Glacier outlines shapefiles.**
 
-### Existing methods
-
-How would you or others traditionally try to address this problem?
-
-### Proposed methods/tools
-
-What new approaches would you like to try to implement to address your specific question(s) or application(s)?
+Available via AWS S3.
 
 ### Additional resources or background reading
 
-Optional: links to manuscripts or technical documents providing background information, context, or other relevant information.
+**Reading and learning:**
+- Interactive visualization of Gaussian Processes: http://www.infinitecuriosity.org/vizgp/,
+- Scikit-learn examples: https://scikit-learn.org/stable/modules/gaussian_process.html#gaussian-process-regression-gpr.
+
+**Video:**
+- Application to glacier elevation changes using ICESat-2 (by Alex Gardner): https://www.youtube.com/watch?v=nhmREuVOWXg&t=1079.
+
+**Code examples:**
+- Application to temporal prediction of ASTER glacier elevation in **pyddem**: https://pyddem.readthedocs.io/en/v0.1.1/fitting.html#gaussian-process-regression-gpr,
+- Application to historical glacier elevation: https://github.com/friedrichknuth/gtsa/blob/main/notebooks/processing/02_time_series_computations.ipynb.
+
+**Publications:**
+- Application to global glacier elevation changes with ASTER (Hugonnet et al., 2021): https://www.nature.com/articles/s41586-021-03436-z,
+- Application to Icelandic glacier elevation with multiple high-res sensors (Bernat et al., 2023): https://dumas.ccsd.cnrs.fr/dumas-03772002.
 
 ### Tasks
 
-What are the individual tasks or steps that need to be taken to achieve the project goals? Think about which tasks are dependent on prior tasks, or which tasks can be performed in parallel. This can help divide up project work among team members.
-
-* Task 1 (all team members)
-* Task 2
-  * Task 2a (assigned to team member A)
-  * Task 2b (assigned to team member B)
-* Task 3
-* ...
+In construction
