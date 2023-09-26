@@ -15,10 +15,10 @@ Its efforts will focus on using and advancing the package Geospatial Time Series
 
 This projects aims to predict continuous surface elevation changes from spatially and temporally sparse elevation measurements.
 
-It has three points of focus:
-- **Data science method:** Practice the use of spatiotemporal prediction, in particular Gaussian Processes, for big remote sensing data.
-- **Software development:** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
-- **Applications:** Apply to glacier elevation changes or snow depth.
+It is primarily a software and data science method-oriented project, with the following three points of focus (decreasing order of envisioned work):
+1. **Software development:** Develop a core Python package for scalable 3D (2D space + 1D time) geospatial analysis, building on [GTSA](https://github.com/friedrichknuth/gtsa).
+2. **Data science method:** Practice the use of spatiotemporal prediction methods, in particular Gaussian Processes, for big remote sensing data.
+3. **Applications:** Apply to glacier elevation changes or snow depth.
 
 Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
 
