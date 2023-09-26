@@ -74,15 +74,15 @@ Available via AWS S3.
 ### Additional resources or background reading
 
 **Reading and learning:**
-- Interactive visualization of Gaussian Processes: http://www.infinitecuriosity.org/vizgp/.
-- Scikit-learn examples: https://scikit-learn.org/stable/modules/gaussian_process.html#gaussian-process-regression-gpr
+- Interactive visualization of Gaussian Processes: http://www.infinitecuriosity.org/vizgp/,
+- Scikit-learn examples: https://scikit-learn.org/stable/modules/gaussian_process.html#gaussian-process-regression-gpr.
 
 **Video:**
 - Application to glacier elevation changes using ICESat-2 (by Alex Gardner): https://www.youtube.com/watch?v=nhmREuVOWXg&t=1079.
 
 **Code examples:**
-- Application to temporal prediction of ASTER glacier elevation in **pyddem**: https://pyddem.readthedocs.io/en/v0.1.1/fitting.html#gaussian-process-regression-gpr. 
-- Application to historical glacier elevation: https://github.com/friedrichknuth/gtsa/blob/main/notebooks/processing/02_time_series_computations.ipynb
+- Application to temporal prediction of ASTER glacier elevation in **pyddem**: https://pyddem.readthedocs.io/en/v0.1.1/fitting.html#gaussian-process-regression-gpr,
+- Application to historical glacier elevation: https://github.com/friedrichknuth/gtsa/blob/main/notebooks/processing/02_time_series_computations.ipynb.
 
 **Publications:**
 - Application to global glacier elevation changes with ASTER (Hugonnet et al., 2021): https://www.nature.com/articles/s41586-021-03436-z,
