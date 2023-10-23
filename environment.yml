@@ -9,3 +9,4 @@ dependencies:
   - zarr
   - gpytorch
   - scikit-learn
+  - s3fs  # To access S3
