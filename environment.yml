@@ -1,0 +1,12 @@
+name: spacetime-dev
+channels:
+  - conda-forge
+dependencies:
+  # No need to repeat other geospatial dependencies for now  (already included in GeoUtils/xDEM), only to fix version
+  - geopandas
+  - xarray
+  - rioxarray
+  - dask
+  - zarr
+  - gpytorch
+  - scikit-learn
