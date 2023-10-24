@@ -2,6 +2,7 @@ name: spacetime-dev
 channels:
   - conda-forge
 dependencies:
+  # Minimal environment to run the notebook in contributors/friedrich
   - geopandas
   - xarray
   - rioxarray
