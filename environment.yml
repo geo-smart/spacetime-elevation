@@ -1,0 +1,13 @@
+name: spacetime-dev
+channels:
+  - conda-forge
+dependencies:
+  # Minimal environment to run the notebook in contributors/friedrich
+  - geopandas
+  - xarray
+  - rioxarray
+  - dask
+  - zarr
+  - gpytorch
+  - scikit-learn
+  - s3fs  # To access S3
