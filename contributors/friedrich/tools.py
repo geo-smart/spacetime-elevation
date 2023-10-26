@@ -329,8 +329,8 @@ def xr_plot_count_std_glacier(
             glacier_bounds = glacier_gdf.bounds.values[0]
             ax.set_xlim(glacier_bounds[0], glacier_bounds[2])
             ax.set_ylim(glacier_bounds[1], glacier_bounds[3])
-#     plt.tight_layout()
-    plt.show()
+    plt.tight_layout()
+#     plt.show()
     if output_file:
         plt.savefig(output_file, bbox_inches='tight')
         plt.close('all')
