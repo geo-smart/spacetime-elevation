@@ -79,7 +79,7 @@ def convert_kernel_pykrige_to_gp(model_name, range, sill) -> tuple[str, float, f
 
 sill = variogram_parameters["sill"]
 range = variogram_parameters["range"]
-gp_model_name, gp_lengthscale, gp_outputscale = convert_kernel_pykrige_to_gp("gaussian", sill, range)
+gp_model_name, gp_lengthscale, gp_outputscale = convert_kernel_pykrige_to_gp("gaussian", range=range, sill=sill)
 
 print("Variogram parameters:\n Model: {}, Sill: {}, Range: {}".format(model_name, sill, range))
 print("Kernel parameters:\n Model: {}, Lengthscale: {}, Outputscale: {}".format(gp_model_name, gp_lengthscale, gp_outputscale))
