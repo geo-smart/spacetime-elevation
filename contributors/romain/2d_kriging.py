@@ -30,6 +30,8 @@ plt.xlim(0, 5)
 plt.ylim(0, 5)
 plt.colorbar()
 plt.title("Input points")
+# plt.set_aspect('equal', adjustable='box')
+
 
 # Define and convert variogram parameters (for both Kriging and GP!)
 variogram_parameters = {'sill': 0.5, 'range': 2, 'nugget': 0}
