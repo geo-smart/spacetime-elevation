@@ -4,10 +4,11 @@
 
 ### Outcomes
 
-This project of the [GeoSMART Hackweek](https://github.com/geo-smart) (initial pitch below) resulted in several investigations, that may develop into discussions/PRs to upstream packages [GPyTorch](https://gpytorch.ai/) or continuation in the package [GTSA](https://github.com/friedrichknuth/gtsa), specifically:
+This project of the [GeoSMART Hackweek](https://github.com/geo-smart) (initial pitch below) resulted in several investigations on Gaussian Process regression for big geospatial data, that may develop into discussions/PRs to upstream packages such as [GPyTorch](https://gpytorch.ai/) and [PyKrige](https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/) and/or into a consolidation of advances in the package [GTSA](https://github.com/friedrichknuth/gtsa).
+More specifically, the main perspectives related to the work done during the hackweek are to:
 1. Ensure consistency of Gaussian Process regression between geostatistical kriging packages (e.g., [PyKrige](https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/)) and machine-learning packages (e.g., [GPyTorch](https://gpytorch.ai/), [SciKit-Learn](https://scikit-learn.org/stable/modules/gaussian_process.html#gaussian-process-regression-gpr)),
 2. Add plotting tools and Leave-One-Out Cross-Validation for 1- or 2-D kernels in machhine-learning packages (learning from good practices in geostats),
-3. Provide scalable GP regression implementations in **space**, **time** and **space+time** for geospatial data (combining Rioxarray, Geocube, Xarray, Dask, Xbatcher, GPyTorch) in a single package like [GTSA](https://github.com/friedrichknuth/gtsa).
+3. Provide scalable GP regression implementations in **space**, **time** and **space+time** for geospatial data (combining Rioxarray, Geocube, Xarray, Dask, Xbatcher, GPyTorch; and using adaptive chunks based on estimated kernel lengthscales) into a single package like [GTSA](https://github.com/friedrichknuth/gtsa).
 
 More updates to come as things develop!
 
