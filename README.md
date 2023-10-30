@@ -1,5 +1,36 @@
 # spacetime-elevation
 
+## End-of-hackweek summary
+
+### Outcomes
+
+This project of the [GeoSMART Hackweek](https://github.com/geo-smart) (initial pitch below) resulted in several investigations on Gaussian Process regression for big geospatial data, that may develop into discussions/PRs to upstream packages such as [GPyTorch](https://gpytorch.ai/) and [PyKrige](https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/) and/or into a consolidation of advances in the package [GTSA](https://github.com/friedrichknuth/gtsa).
+More specifically, the main perspectives related to the work done during the hackweek are to:
+1. Ensure **consistency of Gaussian Process regression** between geostatistical kriging packages (e.g., [PyKrige](https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/)) and machine-learning packages (e.g., [GPyTorch](https://gpytorch.ai/), [SciKit-Learn](https://scikit-learn.org/stable/modules/gaussian_process.html#gaussian-process-regression-gpr)),
+2. Add **plotting tools and Leave-One-Out Cross-Validation for 1- or 2-D kernels** in machine-learning Gaussian Process packages (learning from good practices in geostats),
+3. Provide a **scalable GP regression implementation in space, time and space+time for big geospatial data** combined into a single package such as [GTSA](https://github.com/friedrichknuth/gtsa) (wide range of tools necessary: Rioxarray, Geocube, Dask, Rechuncker, Xbatcher, GPyTorch) that notably supports adaptive chunks based on estimated kernel lengthscales.
+
+More updates to come as things develop! :smile:
+
+### Participants
+
+* [Romain Hugonnet](https://github.com/rhugonnet) (lead)
+* [Friedrich Knuth](https://github.com/friedrichknuth) (co-lead)
+* [Keenan Ganz](https://github.com/s-kganz)
+* [Morgan Sanger](https://github.com/sangermd)
+* [Santiago Munevar](https://github.com/santimug)
+* [George Lu](https://github.com/glugeorge)
+* [Jessica Scheick](https://github.com/JessicaS11)
+* [Emma Liu](https://github.com/EmmaLammE)
+* [Emma Marshall](https://github.com/e-marshall)
+* [Victor Devaux-Chupin](https://github.com/vdevauxchupin)
+* [Ekin Ugurel](https://github.com/ekinugurel)
+* [Tasha Snow](https://github.com/tsnow03)
+* [Shiva Muruganandham](https://github.com/mshiv)
+* [Imran Khan](https://github.com/imran-unh)
+
+## Initial project pitch
+
 Ready to elevate your spatiotemporal prediction skills? :space_invader: :satellite: :globe_with_meridians:
 
 This is a project of the [GeoSMART Hackweek](https://github.com/geo-smart), taking place Oct 23-27 2023 at University of Washington.
@@ -25,12 +56,6 @@ It is primarily a software and data science method-oriented project, with the fo
 3. **Applications:** Apply to glacier elevation changes, or snow depth, or more.
 
 Tools that will be used: [Xarray](https://xarray.dev/), [Dask](https://docs.dask.org/en/stable/), [RioXarray](https://corteva.github.io/rioxarray/html/index.html), [GPyTorch](https://gpytorch.ai/).
-
-### Collaborators
-
-* [Romain Hugonnet](https://github.com/rhugonnet)
-* [Friedrich Knuth](https://github.com/friedrichknuth)
-* ...
 
 ### The problem
 

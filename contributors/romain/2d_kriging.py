@@ -30,6 +30,8 @@ plt.xlim(0, 5)
 plt.ylim(0, 5)
 plt.colorbar()
 plt.title("Input points")
+# plt.set_aspect('equal', adjustable='box')
+
 
 # Define and convert variogram parameters (for both Kriging and GP!)
 variogram_parameters = {'sill': 0.5, 'range': 2, 'nugget': 0}
@@ -79,7 +81,7 @@ def convert_kernel_pykrige_to_gp(model_name, range, sill) -> tuple[str, float, f
 
 sill = variogram_parameters["sill"]
 range = variogram_parameters["range"]
-gp_model_name, gp_lengthscale, gp_outputscale = convert_kernel_pykrige_to_gp("gaussian", sill, range)
+gp_model_name, gp_lengthscale, gp_outputscale = convert_kernel_pykrige_to_gp("gaussian", range=range, sill=sill)
 
 print("Variogram parameters:\n Model: {}, Sill: {}, Range: {}".format(model_name, sill, range))
 print("Kernel parameters:\n Model: {}, Lengthscale: {}, Outputscale: {}".format(gp_model_name, gp_lengthscale, gp_outputscale))
