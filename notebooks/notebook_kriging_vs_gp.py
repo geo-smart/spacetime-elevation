@@ -38,19 +38,42 @@ gridx = np.linspace(-6, 6, 200)
 
 variogram_model = {"model_name": "gaussian", "range": 2, "sill": 2, "nugget": 0.0001}
 
+# Prediction plot
 plt.scatter(data[:, 0], data[:, 1], c='black', marker="x", label="Input data")
 
-y_gpytorch, m_gpytorch = spacetime.models.gpytorch_predict_1d(variogram_model=variogram_model, gridx=gridx, data=data)
-y_sklearn, m_sklearn = spacetime.models.sklearn_predict_1d(variogram_model=variogram_model, gridx=gridx, data=data)
-y_pykrige, m_pykrige = spacetime.models.pykrige_predict_1d(variogram_model=variogram_model, gridx=gridx, data=data)
+y_gpy, sig_gpy, m_gpy = spacetime.models.gpytorch_predict_1d(variogram_model=variogram_model, gridx=gridx, data=data)
+y_skl, sig_skl, m_skl = spacetime.models.sklearn_predict_1d(variogram_model=variogram_model, gridx=gridx, data=data)
+y_pyk, sig_pyk, m_pyk = spacetime.models.pykrige_predict_1d(variogram_model=variogram_model, gridx=gridx, data=data)
+y_gst, sig_gst, m_gst = spacetime.models.gstools_predict_1d(variogram_model=variogram_model, gridx=gridx, data=data)
 
-plt.plot(gridx, y_gpytorch, c="tab:red", label="GPyTorch prediction")
-plt.plot(gridx, y_sklearn, c="tab:blue", label="SciKit-Learn prediction")
-plt.plot(gridx, y_pykrige, c="tab:pink", label="PyKrige prediction")
+plt.plot(gridx, y_gpy, c="tab:red", label="GPyTorch mean prediction")
+plt.fill_between(gridx, y_gpy - 2*sig_gpy, y_gpy + 2*sig_gpy, edgecolor="tab:red", facecolor="None",linestyle="dashed", label="GPyTorch std prediction")
+# plt.plot(gridx, c="tab:red", linestyle="dashed", label="GPyTorch std prediction")
+plt.plot(gridx, y_skl, c="tab:blue", label="SciKit-Learn mean prediction")
+plt.fill_between(gridx, y_skl+ 2*sig_skl, y_skl-2*sig_skl, edgecolor="tab:blue", facecolor="None",linestyle="dashed", label="SciKit-Learn std prediction")
+plt.plot(gridx, y_pyk, c="tab:pink", label="PyKrige mean prediction")
+plt.fill_between(gridx, y_pyk - 2*sig_pyk, y_pyk+2*sig_pyk, edgecolor="tab:pink", facecolor="None",linestyle="dashed", label="PyKrige std prediction")
+plt.plot(gridx, y_gst, c="tab:brown", label="GSTools mean prediction")
+plt.fill_between(gridx, y_gst-2*sig_gst, y_gst+2*sig_gst, edgecolor="tab:brown", facecolor="None", linestyle="dashed", label="GSTools std prediction")
 
 plt.xlabel("1D coordinate")
 plt.ylabel("Prediction")
-plt.title("1D comparison: Kriging vs GP")
+plt.title("1D comparison: prediction")
+plt.legend()
+plt.ylim((-5, 5))
+plt.show()
+
+# Residuals plot
+
+plt.figure()
+y_gpy = np.array(y_gpy)
+plt.plot(gridx, np.abs(y_skl - y_gpy), c="tab:blue", label="Abs. diff SciKit-Learn vs GPytorch")
+plt.plot(gridx, np.abs(y_pyk - y_gpy), c="tab:pink", label="Abs. diff PyKrige vs GPyTorch")
+plt.plot(gridx, np.abs(y_gst - y_gpy), c="tab:brown", label="Abs. diff GSTools vs GPyTorch")
+
+plt.xlabel("1D coordinate")
+plt.ylabel("Residuals")
+plt.title("1D comparison: residuals")
 plt.legend()
 plt.ylim((-5, 5))
 plt.show()
@@ -70,32 +93,96 @@ data = np.array(
 gridx = np.arange(0.0, 5.5, 0.5)
 gridy = np.arange(0.0, 5.5, 0.5)
 
-yy_gpytorch, mm_gpytorch = spacetime.models.gpytorch_predict_2d(variogram_model=variogram_model, gridx=gridx, gridy=gridy, data=data)
-yy_pykrige, mm_pykrige = spacetime.models.pykrige_predict_2d(variogram_model=variogram_model, gridx=gridx, gridy=gridy, data=data)
-yy_sklearn, mm_sklearn = spacetime.models.sklearn_predict_2d(variogram_model=variogram_model, gridx=gridx, gridy=gridy, data=data)
+yy_gpy, sig_gpy, mm_gpy = spacetime.models.gpytorch_predict_2d(variogram_model=variogram_model, gridx=gridx, gridy=gridy, data=data)
+yy_pyk, sig_pyk, mm_pyk = spacetime.models.pykrige_predict_2d(variogram_model=variogram_model, gridx=gridx, gridy=gridy, data=data)
+yy_skl, sig_skl, mm_skl = spacetime.models.sklearn_predict_2d(variogram_model=variogram_model, gridx=gridx, gridy=gridy, data=data)
+yy_gst, sig_gst, mm_gst = spacetime.models.gstools_predict_2d(variogram_model=variogram_model, gridx=gridx, gridy=gridy, data=data)
 
 
-kwargs_cmap = {"vmin": 0, "vmax": 2, "cmap": "Spectral"}
+kwargs_cmap_mean = {"vmin": 0, "vmax": 2, "cmap": "Spectral"}
+import matplotlib
+kwargs_cmap_res = {"cmap": "Reds", "norm": matplotlib.colors.LogNorm(vmin=10**(-8), vmax=0.1)}
 plt.figure()
-plt.subplot(2, 2, 1)
-plt.scatter(x=data[:, 0], y=data[:, 1], c=data[:, 2], **kwargs_cmap)
+plt.title("2D comparison")
+plt.axis('off')
+
+plt.subplot(4, 2, 1)
+plt.scatter(x=data[:, 0], y=data[:, 1], c=data[:, 2], **kwargs_cmap_mean)
 plt.xlim(0, 5)
 plt.ylim(0, 5)
 plt.colorbar()
 plt.title("Input points")
+ax = plt.gca()
+ax.set_aspect('equal', adjustable='box')
 
-plt.subplot(2, 2, 2)
-plt.imshow(yy_gpytorch.reshape((len(gridx), len(gridy))), **kwargs_cmap, origin="lower")
+# def subplot_imshow(pos, pred, title, kwargs_cmap):
+#
+#     plt.subplot(*pos)
+#     plt.imshow(pred, **kwargs_cmap, origin="lower")
+#     plt.colorbar()
+#     plt.title(title)
+#     ax = plt.gca()
+#     ax.axes.get_xaxis().set_ticks([])
+#     ax.axes.get_yaxis().set_ticks([])
+#
+# subplot_imshow()
+
+plt.subplot(4, 2, 2)
+plt.imshow(yy_gpy.reshape((len(gridx), len(gridy))), **kwargs_cmap_mean, origin="lower")
 plt.colorbar()
 plt.title("GPyTorch")
+ax = plt.gca()
+ax.axes.get_xaxis().set_ticks([])
+ax.axes.get_yaxis().set_ticks([])
 
-plt.subplot(2, 2, 3)
-plt.imshow(yy_pykrige.reshape((len(gridx), len(gridy))), **kwargs_cmap, origin="lower")
+plt.subplot(4, 2, 3)
+plt.imshow(yy_pyk.reshape((len(gridx), len(gridy))), **kwargs_cmap_mean, origin="lower")
 plt.colorbar()
 plt.title("PyKrige")
+ax = plt.gca()
+ax.axes.get_xaxis().set_ticks([])
+ax.axes.get_yaxis().set_ticks([])
 
-plt.subplot(2, 2, 4)
-plt.imshow(yy_sklearn.reshape((len(gridx), len(gridy))), **kwargs_cmap, origin="lower")
+plt.subplot(4, 2, 4)
+yy_gpy = np.array(yy_gpy)
+abs_diff_pyk = np.abs(yy_pyk.reshape((len(gridx), len(gridy))) - yy_gpy.reshape((len(gridx), len(gridy))))
+plt.imshow(abs_diff_pyk, **kwargs_cmap_res, origin="lower")
+plt.colorbar()
+plt.title("Abs. diff PyKrige vs GPyTorch")
+ax = plt.gca()
+ax.axes.get_xaxis().set_ticks([])
+ax.axes.get_yaxis().set_ticks([])
+
+plt.subplot(4, 2, 5)
+plt.imshow(yy_skl.reshape((len(gridx), len(gridy))), **kwargs_cmap_mean, origin="lower")
 plt.colorbar()
 plt.title("SciKit-Learn")
+ax = plt.gca()
+ax.axes.get_xaxis().set_ticks([])
+ax.axes.get_yaxis().set_ticks([])
 
+plt.subplot(4, 2, 6)
+abs_diff_skl = np.abs(yy_skl.reshape((len(gridx), len(gridy))) - yy_gpy.reshape((len(gridx), len(gridy))))
+plt.imshow(abs_diff_skl, **kwargs_cmap_res, origin="lower")
+plt.colorbar()
+plt.title("Abs. diff SciKit-Learn vs GPyTorch")
+ax = plt.gca()
+ax.axes.get_xaxis().set_ticks([])
+ax.axes.get_yaxis().set_ticks([])
+
+plt.subplot(4, 2, 7)
+plt.imshow(yy_gst.reshape((len(gridx), len(gridy))), **kwargs_cmap_mean, origin="lower")
+plt.colorbar()
+plt.title("GSTools")
+ax = plt.gca()
+ax.axes.get_xaxis().set_ticks([])
+ax.axes.get_yaxis().set_ticks([])
+
+plt.subplot(4, 2, 8)
+abs_diff_gst = np.abs(yy_gst.reshape((len(gridx), len(gridy))) - yy_gpy.reshape((len(gridx), len(gridy))))
+plt.imshow(abs_diff_gst, **kwargs_cmap_res, origin="lower")
+plt.colorbar()
+plt.title("Abs. diff GSTools vs GPyTorch")
+ax = plt.gca()
+ax.axes.get_xaxis().set_ticks([])
+ax.axes.get_yaxis().set_ticks([])

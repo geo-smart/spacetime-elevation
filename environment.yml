@@ -10,4 +10,6 @@ dependencies:
   - zarr
   - gpytorch
   - scikit-learn
+  - pykrige
+  - gstools
   - s3fs  # To access S3
