@@ -8,14 +8,14 @@ def convert_kernel_pykrige_to_gp(variogram_model: dict[str | float | str]) -> tu
     """
     Convert PyKrige variogram to kernel (GPyTorch or SciKit-Learn).
 
-    :param variogram_model: Dictionary with "model_name", "range" and "sill" corresponding to PyKrige definitions.
+    :param variogram_model: Dictionary with "model_name", "range" and "psill" corresponding to PyKrige definitions.
         See https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/variogram_models.html.
 
     :return: Name of GPyTorch or SciKit-Learn GP model, Lenghtscale, Outputscale.
     """
 
     model_name = variogram_model["model_name"]
-    sill = variogram_model["sill"]
+    psill = variogram_model["psill"]
     range = variogram_model["range"]
 
     if model_name == "gaussian":
@@ -29,7 +29,7 @@ def convert_kernel_pykrige_to_gp(variogram_model: dict[str | float | str]) -> tu
 
         gp_model_name = "RBF"
         gp_lengthscale = range * (4/7) / np.sqrt(2)
-        gp_outputscale = sill
+        gp_outputscale = psill
 
     elif model_name == "exponential":
         # Lengthscale for exponential in PyKrige: EXP(D / A) with A = R/3
@@ -43,7 +43,7 @@ def convert_kernel_pykrige_to_gp(variogram_model: dict[str | float | str]) -> tu
         # Unsure about this one, but it looks like in SciKit-GStat the matern with scale 1/2 equals the exponential at same range,
         # and the exponential has R/3 and Matern R/2, so should be 2/3...
         gp_lengthscale = range * 2 / 3
-        gp_outputscale = sill
+        gp_outputscale = psill
 
     else:
         raise ValueError("model_name should be one of {}".format(["gaussian", "exponential"]))
@@ -56,14 +56,14 @@ def convert_kernel_pykrige_to_gstools(variogram_model: dict[str | float | str]) 
     """
     Convert PyKrige variogram to GSTools variogram.
 
-    :param variogram_model: Dictionary with "model_name", "range" and "sill" corresponding to PyKrige definitions.
+    :param variogram_model: Dictionary with "model_name", "range" and "psill" corresponding to PyKrige definitions.
         See https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/variogram_models.html.
 
     :return: Name of GSTools model, Range, Sill.
     """
 
     model_name = variogram_model["model_name"]
-    sill = variogram_model["sill"]
+    psill = variogram_model["psill"]
     range = variogram_model["range"]
 
     if model_name == "gaussian":
@@ -77,7 +77,7 @@ def convert_kernel_pykrige_to_gstools(variogram_model: dict[str | float | str]) 
 
         gstools_model_name = "Gaussian"
         gstools_range = range * (4/7) * np.sqrt(np.pi) / 2
-        gstools_sill = sill
+        gstools_psill = psill
 
     elif model_name == "exponential":
         # Lengthscale for exponential in PyKrige: EXP(-D / A) with A = R/3
@@ -90,9 +90,9 @@ def convert_kernel_pykrige_to_gstools(variogram_model: dict[str | float | str]) 
         # Unsure about this one, but it looks like in SciKit-GStat the matern with scale 1/2 equals the exponential at same range,
         # and the exponential has R/3 and Matern R/2, so should be 2/3...
         gstools_range = range * 3
-        gstools_sill = sill
+        gstools_psill = psill
 
     else:
         raise ValueError("model_name should be one of {}".format(["gaussian", "exponential"]))
 
-    return gstools_model_name, gstools_range, gstools_sill
+    return gstools_model_name, gstools_range, gstools_psill

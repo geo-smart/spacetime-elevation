@@ -1,5 +1,5 @@
 """
-Functions to run kriging or Gaussian Process models in 1D time, 2D space and 3D space+time
+Functions to run kriging or GP regression in 1D and 2D with GPyTorch, SciKit-Learn, PyKrige and GSTools.
 """
 
 import numpy as np
@@ -13,10 +13,21 @@ from gstools import krige
 
 from spacetime import conversions
 
+####################################################################
 # 1/ GPyTorch models and prediction fixing the covariance parameters
-# Correspondance with kriging:! a GPyTorch kernel is always a ScaleKernel (variogram sill) * BaseKernel (variogram form)
+####################################################################
+# Notes on correspondance with kriging:
+# - a GPyTorch kernel is always a ScaleKernel (variogram sill) * BaseKernel (variogram form with range).
+# So, in short:
+# - sill = outputscale,
+# - lengthscale = range (after some conversions),
+# - nugget = noise_level (if homoscedastic).
 
-def gpytorch_1d_model(train_x, train_y, base_kernel, lengthscale, outputscale, noise):
+def gpytorch_1d_model(train_x: torch.Tensor, train_y: torch.Tensor, base_kernel: gpytorch.kernels.Kernel, 
+                      lengthscale: float, outputscale: float, noise: float):
+    """
+    Define exact GPyTorch 1D model and fix covariance parameters.
+    """
 
     # Exact GP model in 1D (see https://docs.gpytorch.ai/en/stable/examples/01_Exact_GPs/Simple_GP_Regression.html)
     class Exact1DModel(gpytorch.models.ExactGP):
@@ -44,7 +55,11 @@ def gpytorch_1d_model(train_x, train_y, base_kernel, lengthscale, outputscale, n
 
     return model
 
-def gpytorch_2d_shared_model(train_x, train_y, base_kernel, lengthscale, outputscale, noise):
+def gpytorch_2d_shared_model(train_x: torch.Tensor, train_y: torch.Tensor, base_kernel: gpytorch.kernels.Kernel, 
+                             lengthscale: float, outputscale: float, noise: float):
+    """
+    Define exact GPyTorch 2D model and fix shared covariance parameters.
+    """
 
     # Shared 2D kernel
     class Exact2DShared(gpytorch.models.ExactGP):
@@ -73,66 +88,13 @@ def gpytorch_2d_shared_model(train_x, train_y, base_kernel, lengthscale, outputs
 
     return model
 
-def gpytorch_2d_additive_model(train_x, train_y, base_kernel, lengthscale, outputscale, noise):
+def gpytorch_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarray, data: np.ndarray, use_gpu=False, love=False, rank=100):
+    """
+    Predict with GPyTorch 1D model on data.
 
-    # Additive 2D kernel
-    class Exact2DAdditive(gpytorch.models.ExactGP):
-        def __init__(self, train_x, train_y, likelihood):
-            super(Exact2DAdditive, self).__init__(train_x, train_y, likelihood)
-            num_dims = train_x.size(-1)
-            self.mean_module = gpytorch.means.ConstantMean()
-            self.covar_module = gpytorch.kernels.ScaleKernel(base_kernel(active_dims=(0,))) + \
-                                gpytorch.kernels.ScaleKernel(base_kernel(active_dims=(1,)))
+    Returns means, sigmas and model.
+    """
 
-        def forward(self, x):
-            mean_x = self.mean_module(x)
-            covar_x = self.covar_module(x)
-            return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
-
-    likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    model = Exact2DAdditive(train_x, train_y, likelihood)
-
-    # Initialize parameters for additive kernel
-    model.likelihood.noise_covar.noise = torch.tensor(noise)
-    model.mean_module.constant = torch.mean(train_y)
-    model.covar_module.kernels[0].base_kernel.lengthscale = torch.tensor(lengthscale)
-    model.covar_module.kernels[0].outputscale = torch.tensor(outputscale)
-    model.covar_module.kernels[1].base_kernel.lengthscale = torch.tensor(lengthscale)
-    model.covar_module.kernels[1].outputscale = torch.tensor(outputscale)
-
-    return model
-
-def gpytorch_2d_product_model(train_x, train_y, base_kernel, lengthscale, outputscale, noise):
-
-    # Product 2D kernel
-    class Exact2DProduct(gpytorch.models.ExactGP):
-        def __init__(self, train_x, train_y, likelihood):
-            super(Exact2DProduct, self).__init__(train_x, train_y, likelihood)
-            num_dims = train_x.size(-1)
-            self.mean_module = gpytorch.means.ConstantMean()
-            self.covar_module = gpytorch.kernels.ScaleKernel(base_kernel(active_dims=(0,))) * \
-                                gpytorch.kernels.ScaleKernel(base_kernel(active_dims=(1,)))
-
-        def forward(self, x):
-            mean_x = self.mean_module(x)
-            covar_x = self.covar_module(x)
-            return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
-
-    likelihood = gpytorch.likelihoods.GaussianLikelihood()
-    model = Exact2DProduct(train_x, train_y, likelihood)
-
-    # Initialize parameters for product kernel
-    model.likelihood.noise_covar.noise = torch.tensor(noise)
-    model.mean_module.constant = torch.mean(train_y)
-    model.covar_module.kernels[0].base_kernel.lengthscale = torch.tensor(lengthscale)
-    model.covar_module.kernels[0].outputscale = torch.tensor(np.sqrt(outputscale))
-    model.covar_module.kernels[1].base_kernel.lengthscale = torch.tensor(lengthscale)
-    model.covar_module.kernels[1].outputscale = torch.tensor(np.sqrt(outputscale))
-
-    return model
-
-
-def gpytorch_predict_1d(variogram_model, gridx, data):
     # Convert variogram form and parameters into base kernel form and parameters
     base_kernel_name, lengthscale, outputscale = conversions.convert_kernel_pykrige_to_gp(variogram_model)
 
@@ -150,22 +112,44 @@ def gpytorch_predict_1d(variogram_model, gridx, data):
     model = gpytorch_1d_model(train_x=train_x, train_y=train_y, base_kernel=base_kernel,
                               lengthscale=lengthscale, outputscale=outputscale,
                               noise=variogram_model["nugget"])
+    likelihood = model.likelihood
+
+    if use_gpu:
+        train_x = train_x.cuda()
+        train_y = train_y.cuda()
+        model = model.cuda()
+        likelihood = likelihood.cuda()
+        grid_coords = grid_coords.cuda()
 
     # Predict
-    likelihood = model.likelihood
     model.eval()  # We go in eval mode without training
     likelihood.eval()
-    with torch.no_grad(), gpytorch.settings.fast_pred_var():
-        observed_pred = likelihood(model(grid_coords))  # And predict on the grid coordinates
+    if love:
+        with torch.no_grad(), gpytorch.settings.fast_pred_var(), gpytorch.settings.max_root_decomposition_size(rank):
+            observed_pred = likelihood(model(grid_coords))  # And predict on the grid coordinates
+    else:
+        with torch.no_grad():
+            observed_pred = likelihood(model(grid_coords))
 
     means = observed_pred.mean
     lower, upper = observed_pred.confidence_region()
+
+    if use_gpu:
+        means = means.cpu()
+        upper = upper.cpu()
+        lower = lower.cpu()
+
     sigmas = (upper - means) / 2  # Returns two STD
 
-    return means, sigmas, model
+    return means.numpy(), sigmas.numpy(), model
 
 
-def gpytorch_predict_2d(variogram_model, gridx, gridy, data):
+def gpytorch_predict_2d(variogram_model: dict[str, str | float], gridx: np.ndarray, gridy: np.ndarray, data: np.ndarray):
+    """
+    Predict with GPyTorch 2D model on data.
+
+    Returns means, sigmas and model.
+    """
 
     # Convert variogram form and parameters into base kernel form and parameters
     base_kernel_name, lengthscale, outputscale = conversions.convert_kernel_pykrige_to_gp(variogram_model)
@@ -183,7 +167,7 @@ def gpytorch_predict_2d(variogram_model, gridx, gridy, data):
     # Define model and fix covariance parameters
     model = gpytorch_2d_shared_model(train_x=train_x, train_y=train_y, base_kernel=base_kernel,
                                      lengthscale=lengthscale, outputscale=outputscale,
-                                     noise=variogram_model["nugget"])
+                                     noise=np.sqrt(variogram_model["nugget"]))
 
     # Predict
     likelihood = model.likelihood
@@ -196,11 +180,19 @@ def gpytorch_predict_2d(variogram_model, gridx, gridy, data):
     lower, upper = observed_pred.confidence_region()
     sigmas = (upper - means) / 2  # Returns two STD
 
-    return means, sigmas, model
+    return means.numpy(), sigmas.numpy(), model
 
+
+###############################################################
 # 2/ SciKit-Learn GP model and prediction fixing the covariance
+###############################################################
 
-def sklearn_predict_1d(variogram_model, gridx, data):
+def sklearn_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarray, data: np.ndarray, use_gpu=False, love=False, rank=10):
+    """
+    Predict with SciKit-Learn 1D model on data.
+
+    Returns means, sigmas and model.
+    """
 
     # Convert parameters
     base_kernel_name, lengthscale, outputscale = conversions.convert_kernel_pykrige_to_gp(variogram_model)
@@ -230,7 +222,12 @@ def sklearn_predict_1d(variogram_model, gridx, data):
     return y_pred, sigma, gpr
 
 
-def sklearn_predict_2d(variogram_model, gridx, gridy, data):
+def sklearn_predict_2d(variogram_model: dict[str, str | float], gridx: np.ndarray, gridy: np.ndarray, data: np.ndarray):
+    """
+    Predict with SciKit-Learn 2D model on data.
+
+    Returns means, sigmas and model.
+    """
 
     # Convert parameters
     base_kernel_name, lengthscale, outputscale = conversions.convert_kernel_pykrige_to_gp(variogram_model)
@@ -241,8 +238,7 @@ def sklearn_predict_2d(variogram_model, gridx, gridy, data):
              sklearn.gaussian_process.kernels.WhiteKernel(variogram_model["nugget"])
 
     # Define regressor, without optimizer to fix the parameters
-    gpr = sklearn.gaussian_process.GaussianProcessRegressor(kernel=kernel, optimizer=None, normalize_y=False,
-                                                            alpha=variogram_model["nugget"])
+    gpr = sklearn.gaussian_process.GaussianProcessRegressor(kernel=kernel, optimizer=None, normalize_y=False)
 
     # Transform y to be centered on the mean manually
     y_in = data[:, 2]
@@ -264,12 +260,19 @@ def sklearn_predict_2d(variogram_model, gridx, gridy, data):
     return y_pred, sigma, gpr
 
 
+################################################################
 # 3/ PyKrige kriging models and prediction fixing the covariance
+################################################################
 
-def pykrige_predict_1d(variogram_model, gridx, data):
+def pykrige_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarray, data: np.ndarray):
+    """
+    Predict with PyKrige 1D model on data.
+
+    Returns means, sigmas and model.
+    """
 
     model_name = variogram_model["model_name"]
-    variogram_parameters = {k: variogram_model[k] for k in ["sill", "range", "nugget"]}
+    variogram_parameters = {k: variogram_model[k] for k in ["psill", "range", "nugget"]}
 
     # Define model forcing variogram parameters
     OK = OrdinaryKriging(
@@ -290,10 +293,15 @@ def pykrige_predict_1d(variogram_model, gridx, data):
     return z, ss, OK
 
 
-def pykrige_predict_2d(variogram_model, gridx, gridy, data):
+def pykrige_predict_2d(variogram_model: dict[str, str | float], gridx: np.ndarray, gridy: np.ndarray, data: np.ndarray):
+    """
+    Predict with PyKrige 2D model on data.
+
+    Returns means, sigmas and model.
+    """
 
     model_name = variogram_model["model_name"]
-    variogram_parameters = {k: variogram_model[k] for k in ["sill", "range", "nugget"]}
+    variogram_parameters = {k: variogram_model[k] for k in ["psill", "range", "nugget"]}
 
     # Define model forcing variogram parameters
     OK = OrdinaryKriging(
@@ -311,9 +319,17 @@ def pykrige_predict_2d(variogram_model, gridx, gridy, data):
 
     return z, ss, OK
 
-# 4/ GSTools kriging models and prediction fixing the covariance
 
-def gstools_predict_1d(variogram_model, gridx, data):
+################################################################
+# 4/ GSTools kriging models and prediction fixing the covariance
+################################################################
+
+def gstools_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarray, data: np.ndarray):
+    """
+    Predict with GSTools 1D model on data.
+
+    Returns means, sigmas and model.
+    """
 
     model_name, range, sill = conversions.convert_kernel_pykrige_to_gstools(variogram_model)
     model = getattr(gstools, model_name)(dim=1, var=sill, len_scale=range, nugget=variogram_model["nugget"])
@@ -322,7 +338,12 @@ def gstools_predict_1d(variogram_model, gridx, data):
 
     return k(gridx)[0], k(gridx)[1], k
 
-def gstools_predict_2d(variogram_model, gridx, gridy, data):
+def gstools_predict_2d(variogram_model: dict[str, str | float], gridx: np.ndarray, gridy: np.ndarray, data: np.ndarray):
+    """
+    Predict with GSTools 1D model on data.
+
+    Returns means, sigmas and model.
+    """
 
     model_name, range, sill = conversions.convert_kernel_pykrige_to_gstools(variogram_model)
     model = getattr(gstools, model_name)(dim=2, var=sill, len_scale=range, nugget=variogram_model["nugget"])
