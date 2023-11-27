@@ -4,6 +4,11 @@
 
 ### Outcomes
 
+
+:grey_exclamation: **Update 26.11.2023** :grey_exclamation:
+
+New consolidated outcome notebooks :notebook_with_decorative_cover: can now be found in *notebooks/*, using functions coded consistently in *spacetime/*. 
+
 This project of the [GeoSMART Hackweek](https://github.com/geo-smart) (initial pitch below) resulted in several investigations on Gaussian Process regression for big geospatial data, that may develop into discussions/PRs to upstream packages such as [GPyTorch](https://gpytorch.ai/) and [PyKrige](https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/) and/or into a consolidation of advances in the package [GTSA](https://github.com/friedrichknuth/gtsa).
 More specifically, the main perspectives related to the work done during the hackweek are to:
 1. Ensure **consistency of Gaussian Process regression** between geostatistical kriging packages (e.g., [PyKrige](https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/)) and machine-learning packages (e.g., [GPyTorch](https://gpytorch.ai/), [SciKit-Learn](https://scikit-learn.org/stable/modules/gaussian_process.html#gaussian-process-regression-gpr)),
@@ -11,10 +16,6 @@ More specifically, the main perspectives related to the work done during the hac
 3. Provide a **scalable GP regression implementation in space, time and space+time for big geospatial data** combined into a single package such as [GTSA](https://github.com/friedrichknuth/gtsa) (wide range of tools necessary: Rioxarray, Geocube, Dask, Rechuncker, Xbatcher, GPyTorch) that notably supports adaptive chunks based on estimated kernel lengthscales.
 
 More updates to come as things develop! :smile:
-
-:grey_exclamation: **Update 26.11.2023** :grey_exclamation:
-
-New consolidated outcome notebooks can now be found in *notebooks/*, using functions coded consistently in *spacetime/* :notebook_with_decorative_cover:. 
 
 ### Participants
 
