@@ -2,7 +2,12 @@
 
 ## End-of-hackweek summary
 
+### Update 26.11.23
+
+New consolidated outcome notebooks :notebook_with_decorative_cover: can now be found in *notebooks/*, using functions coded consistently in *spacetime/*. :grin:
+
 ### Outcomes
+
 
 This project of the [GeoSMART Hackweek](https://github.com/geo-smart) (initial pitch below) resulted in several investigations on Gaussian Process regression for big geospatial data, that may develop into discussions/PRs to upstream packages such as [GPyTorch](https://gpytorch.ai/) and [PyKrige](https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/) and/or into a consolidation of advances in the package [GTSA](https://github.com/friedrichknuth/gtsa).
 More specifically, the main perspectives related to the work done during the hackweek are to:
