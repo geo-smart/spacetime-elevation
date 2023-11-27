@@ -3,6 +3,28 @@ Functions to convert covariance between kriging and GP packages.
 """
 import numpy as np
 
+def parse_covar_for_gp(variogram_or_kernel: dict[str | float | str]) -> tuple[str, float, float, float]:
+    """
+    Get parameters of variogram or kernel.
+
+    Variograms must follow PyKrige parameter definitions.
+
+    :param variogram_or_kernel: Dictionary with "model_name", and either "range", "psill" for variograms,
+        or "lengthscale", "outputscale" for kernels.
+
+    :return: Name of model, Lengthscale, Outputscale, Noise level.
+    """
+
+    if "range" in variogram_or_kernel:
+        model_name, lengthscale, outputscale = convert_kernel_pykrige_to_gp(variogram_model=variogram_or_kernel)
+        noise = variogram_or_kernel["nugget"]
+    else:
+        model_name = variogram_or_kernel["model_name"]
+        lengthscale = variogram_or_kernel["lengthscale"]
+        outputscale = variogram_or_kernel["outputscale"]
+        noise = variogram_or_kernel["noise_level"]
+
+    return model_name, lengthscale, outputscale, noise
 
 def convert_kernel_pykrige_to_gp(variogram_model: dict[str | float | str]) -> tuple[str, float, float]:
     """
@@ -11,7 +33,7 @@ def convert_kernel_pykrige_to_gp(variogram_model: dict[str | float | str]) -> tu
     :param variogram_model: Dictionary with "model_name", "range" and "psill" corresponding to PyKrige definitions.
         See https://geostat-framework.readthedocs.io/projects/pykrige/en/stable/variogram_models.html.
 
-    :return: Name of GPyTorch or SciKit-Learn GP model, Lenghtscale, Outputscale.
+    :return: Name of GPyTorch or SciKit-Learn GP model, Lengthscale, Outputscale.
     """
 
     model_name = variogram_model["model_name"]
@@ -49,7 +71,6 @@ def convert_kernel_pykrige_to_gp(variogram_model: dict[str | float | str]) -> tu
         raise ValueError("model_name should be one of {}".format(["gaussian", "exponential"]))
 
     return gp_model_name, gp_lengthscale, gp_outputscale
-
 
 
 def convert_kernel_pykrige_to_gstools(variogram_model: dict[str | float | str]) -> tuple[str, float, float]:

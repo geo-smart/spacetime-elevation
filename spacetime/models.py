@@ -24,7 +24,8 @@ from spacetime import conversions
 # - nugget = noise_level (if homoscedastic).
 
 def gpytorch_1d_model(train_x: torch.Tensor, train_y: torch.Tensor, base_kernel: gpytorch.kernels.Kernel, 
-                      lengthscale: float, outputscale: float, noise: float):
+                      lengthscale: float, outputscale: float, noise: float, likelihood_missing=False, add_linear=False,
+                      err: torch.Tensor = None, force_mean: float = None):
     """
     Define exact GPyTorch 1D model and fix covariance parameters.
     """
@@ -36,22 +37,47 @@ def gpytorch_1d_model(train_x: torch.Tensor, train_y: torch.Tensor, base_kernel:
             self.mean_module = gpytorch.means.ConstantMean()
             self.covar_module = gpytorch.kernels.ScaleKernel(base_kernel())
 
+            if add_linear:
+                # self.covar_module += gpytorch.kernels.ScaleKernel(gpytorch.kernels.PeriodicKernel())
+                self.covar_module += gpytorch.kernels.LinearKernel()
+
         def forward(self, x):
             mean_x = self.mean_module(x)
             covar_x = self.covar_module(x)
             return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
 
-    likelihood = gpytorch.likelihoods.GaussianLikelihood()
+    if likelihood_missing:
+        likelihood = gpytorch.likelihoods.GaussianLikelihoodWithMissingObs()
+    elif err is not None:
+        likelihood = gpytorch.likelihoods.FixedNoiseGaussianLikelihood(noise=err**2)
+    else:
+        likelihood = gpytorch.likelihoods.GaussianLikelihood()
+
     model = Exact1DModel(train_x, train_y, likelihood)
 
+    if force_mean is not None:
+        mean_y = torch.tensor(force_mean)
+    else:
+        mean_y = torch.mean(train_y)
+
     # Fix covariance parameters
-    hypers = {
-        'likelihood.noise_covar.noise': torch.tensor(noise),
-        'mean_module.constant': torch.mean(train_y),
-        'covar_module.base_kernel.lengthscale': torch.tensor(lengthscale),
-        'covar_module.outputscale': torch.tensor(outputscale),
-    }
-    model.initialize(**hypers)
+    if not add_linear:
+        hypers = {
+            'mean_module.constant': mean_y,
+            'covar_module.base_kernel.lengthscale': torch.tensor(lengthscale),
+            'covar_module.outputscale': torch.tensor(outputscale),
+        }
+        if err is None:
+            hypers.update({'likelihood.noise_covar.noise': torch.tensor(noise)})
+
+        model.initialize(**hypers)
+    else:
+        # Need to select the first kernel only to fix parameters when adding a Linear kernel
+        if err is None:
+            model.likelihood.noise_covar.noise = torch.tensor(noise).float()
+        model.mean_module.constant = mean_y.float()
+        model.covar_module.kernels[0].base_kernel.lengthscale = torch.tensor(lengthscale).float()
+        model.covar_module.kernels[0].outputscale = torch.tensor(outputscale).float()
 
     return model
 
@@ -88,7 +114,9 @@ def gpytorch_2d_shared_model(train_x: torch.Tensor, train_y: torch.Tensor, base_
 
     return model
 
-def gpytorch_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarray, data: np.ndarray, use_gpu=False, love=False, rank=100):
+def gpytorch_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarray, data: np.ndarray,
+                        err: np.ndarray = None, use_gpu=False, love=False, rank=100, likelihood_missing=False,
+                        add_linear=False, force_mean=None):
     """
     Predict with GPyTorch 1D model on data.
 
@@ -96,7 +124,7 @@ def gpytorch_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarr
     """
 
     # Convert variogram form and parameters into base kernel form and parameters
-    base_kernel_name, lengthscale, outputscale = conversions.convert_kernel_pykrige_to_gp(variogram_model)
+    base_kernel_name, lengthscale, outputscale, noise_level = conversions.parse_covar_for_gp(variogram_model)
 
     # Convert x/y grid into
     grid_coords = torch.from_numpy(gridx)
@@ -106,12 +134,16 @@ def gpytorch_predict_1d(variogram_model: dict[str, str | float], gridx: np.ndarr
     # Y data are values to predict (1 column)
     train_y = torch.from_numpy(data[:, 1])
 
+    if err is not None:
+        err = torch.from_numpy(err)
+
     base_kernel = getattr(gpytorch.kernels, base_kernel_name + "Kernel")  # GPyTorch adds "Kernel" to each name
 
     # Define model and fix covariance parameters
     model = gpytorch_1d_model(train_x=train_x, train_y=train_y, base_kernel=base_kernel,
                               lengthscale=lengthscale, outputscale=outputscale,
-                              noise=variogram_model["nugget"])
+                              noise=noise_level, likelihood_missing=likelihood_missing, add_linear=add_linear,
+                              err=err, force_mean=force_mean)
     likelihood = model.likelihood
 
     if use_gpu:
