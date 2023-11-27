@@ -41,7 +41,6 @@ def gpytorch_1d_model(train_x: torch.Tensor, train_y: torch.Tensor, base_kernel:
                 # self.covar_module += gpytorch.kernels.ScaleKernel(gpytorch.kernels.PeriodicKernel())
                 self.covar_module += gpytorch.kernels.LinearKernel()
 
-
         def forward(self, x):
             mean_x = self.mean_module(x)
             covar_x = self.covar_module(x)
