@@ -12,9 +12,9 @@ More specifically, the main perspectives related to the work done during the hac
 
 More updates to come as things develop! :smile:
 
-:grey_exclamation: **Update 26.11.2023!** :grey_exclamation:
+:grey_exclamation: **Update 26.11.2023** :grey_exclamation:
 
-New consolidated outcome notebooks can now be found in *notebooks/*, using functions coded consistently in *spacetime/*!
+New consolidated outcome notebooks can now be found in *notebooks/*, using functions coded consistently in *spacetime/* :notebook_with_decorative_cover:. 
 
 ### Participants
 
